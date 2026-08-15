@@ -28,3 +28,14 @@ def test_detalhe_corresponde_ao_produto_escolhido(catalog, product_id, name, pri
     catalog.wait.until(EC.url_contains('/inventory.html'))
     assert len(catalog.prices()) == 6
 
+
+def test_adiciona_pelo_detalhe_e_remove_pelo_carrinho(catalog):
+    catalog.open_product(4)
+    catalog.element('add-to-cart').click()
+    assert catalog.element('shopping-cart-badge').text == '1'
+    catalog.open_cart()
+    assert catalog.element('inventory-item-name').text == 'Sauce Labs Backpack'
+    catalog.element('remove-sauce-labs-backpack').click()
+    catalog.wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, '[data-test="inventory-item"]')))
+    assert not catalog.driver.find_elements(By.CSS_SELECTOR, '[data-test="shopping-cart-badge"]')
+
