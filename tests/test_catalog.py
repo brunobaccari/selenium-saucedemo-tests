@@ -3,7 +3,7 @@ import os
 from urllib.parse import urljoin
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 
 
 @pytest.mark.parametrize('sort,expected', [
@@ -43,7 +43,7 @@ def test_adiciona_pelo_detalhe_e_remove_pelo_carrinho(catalog):
 def test_logout_exige_novo_login_para_catalogo(catalog):
     catalog.driver.find_element(By.ID, 'react-burger-menu-btn').click()
     catalog.wait.until(lambda driver: driver.find_element(By.CLASS_NAME, 'bm-menu-wrap').rect['x'] == 0)
-    ActionChains(catalog.driver).move_to_element(catalog.element('logout-sidebar-link')).click().perform()
+    catalog.element('logout-sidebar-link').send_keys(Keys.ENTER)
     catalog.element('login-button')
     catalog.driver.get(urljoin(os.environ['BASE_URL'], 'inventory.html'))
     assert catalog.element('error').text == "Epic sadface: You can only access '/inventory.html' when you are logged in."
