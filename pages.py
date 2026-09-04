@@ -12,7 +12,24 @@ class CatalogPage:
         self.wait = WebDriverWait(driver, 15)
 
     def element(self, test_id):
-        return self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, f'[data-test="{test_id}"]')))
+        previous_rect = None
+
+        def stable_element(driver):
+            nonlocal previous_rect
+            try:
+                element = driver.find_element(By.CSS_SELECTOR, f'[data-test="{test_id}"]')
+                if not element.is_displayed():
+                    previous_rect = None
+                    return False
+                rect = element.rect
+                stable = rect == previous_rect
+                previous_rect = rect
+                return element if stable else False
+            except (NoSuchElementException, StaleElementReferenceException):
+                previous_rect = None
+                return False
+
+        return self.wait.until(stable_element)
 
     def login(self):
         self.driver.get(os.environ['BASE_URL'])
