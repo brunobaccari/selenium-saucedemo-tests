@@ -1,5 +1,7 @@
 # Catálogo do SauceDemo — Selenium e Python
 
+[English version](README.en.md)
+
 Testes contra **https://www.saucedemo.com/**, com Page Object e casos parametrizados. Complementa meu [checkout com Selenium](https://github.com/brunobaccari/selenium-test-checkout-automation) com verificações de catálogo, detalhe do produto e sessão.
 
 ## Instalação
@@ -13,6 +15,7 @@ python -m venv .venv
 Ative com `.venv\Scripts\activate` no Windows ou `source .venv/bin/activate` no Linux/macOS.
 
 ```bash
+cp .env.example .env
 python -m pip install -r requirements.txt
 python -m pytest -q --junitxml=results/junit.xml
 ```
