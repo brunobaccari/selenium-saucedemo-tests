@@ -30,4 +30,8 @@ Before returning an element, the Page Object waits for visibility and stable pos
 
 JUnit and screenshots are written to `results/` and uploaded by CI. See [Actions runs and artifacts](https://github.com/brunobaccari/selenium-saucedemo-tests/actions). No local application, mocks or fixed sleeps. Only the public demo account is used. Catalog changes may require reviewing expected results.
 
+## GitHub Actions results
+
+In GitHub, open **Actions → Tests → run → Summary** for status and counts. Under **Artifacts**, download `results`: it contains `junit.xml` and screenshots when failures are captured by the fixture. Reports are uploaded even when tests fail and retained for 30 days.
+
 Commit dates in this portfolio were reorganized retroactively; Actions runs retain their actual execution dates.
