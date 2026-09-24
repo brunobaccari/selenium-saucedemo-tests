@@ -39,6 +39,8 @@ JUnit e screenshots em `results/`, publicados como artifacts no CI. [Execuções
 
 O Page Object aguarda visibilidade e estabilidade da posição e dimensão antes de devolver um elemento. O logout é ativado por teclado. Não há repetição automática de ações nem de cenários.
 
+O Chrome usa um perfil temporário com os diálogos de salvamento e verificação de senhas desativados. A conta pública da demonstração pode acionar a interface do gerenciador de senhas fora do DOM e interferir nos cliques. Essa configuração pertence apenas ao navegador iniciado pela suíte.
+
 Copie `.env.example` para `.env` (`Copy-Item .env.example .env` no PowerShell ou `cp .env.example .env` no Linux/macOS). As variáveis do processo têm prioridade. `.env` não é versionado. URLs e credenciais ficam nessa configuração; os valores esperados dos testes permanecem nos cenários.
 
 As contas do exemplo são públicas e exclusivas de demonstração. Para outro ambiente, injete credenciais via secrets do CI e confirme também o contrato e os dados esperados antes de executar.

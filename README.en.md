@@ -26,6 +26,8 @@ Six cases cover both price-sort directions with complete expected sequences, bac
 
 Before returning an element, the Page Object waits for visibility and stable position/dimensions. It reads fresh references while waiting. Logout is activated with Enter, exercising keyboard navigation. Actions and tests are not automatically retried.
 
+Chrome uses a temporary profile with password-saving and leak-check dialogs disabled. The public demo account can trigger password-manager UI outside the DOM and interfere with clicks. This configuration applies only to the browser started by the suite.
+
 ## Evidence and limits
 
 JUnit and screenshots are written to `results/` and uploaded by CI. See [Actions runs and artifacts](https://github.com/brunobaccari/selenium-saucedemo-tests/actions). No local application, mocks or fixed sleeps. Only the public demo account is used. Catalog changes may require reviewing expected results.
