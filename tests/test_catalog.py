@@ -40,10 +40,15 @@ def test_adiciona_pelo_detalhe_e_remove_pelo_carrinho(catalog):
     assert not catalog.driver.find_elements(By.CSS_SELECTOR, '[data-test="shopping-cart-badge"]')
 
 
-def test_logout_exige_novo_login_para_catalogo(catalog):
+@pytest.mark.parametrize('route', [
+    'inventory.html', 'cart.html', 'checkout-step-one.html', 'checkout-step-two.html',
+])
+def test_logout_bloqueia_acesso_direto_as_rotas_protegidas(catalog, route):
     catalog.driver.find_element(By.ID, 'react-burger-menu-btn').click()
     catalog.wait.until(lambda driver: driver.find_element(By.CLASS_NAME, 'bm-menu-wrap').rect['x'] == 0)
     catalog.element('logout-sidebar-link').send_keys(Keys.ENTER)
     catalog.element('login-button')
-    catalog.driver.get(urljoin(os.environ['BASE_URL'], 'inventory.html'))
-    assert catalog.element('error').text == "Epic sadface: You can only access '/inventory.html' when you are logged in."
+    catalog.driver.get(urljoin(os.environ['BASE_URL'], route))
+    assert catalog.element('error').text == f"Epic sadface: You can only access '/{route}' when you are logged in."
+    assert catalog.element('login-button').is_displayed()
+    assert not catalog.driver.find_elements(By.CSS_SELECTOR, '[data-test="inventory-item"]')
