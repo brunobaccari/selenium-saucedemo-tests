@@ -49,4 +49,10 @@ As contas do exemplo são públicas e exclusivas de demonstração. Para outro a
 
 No GitHub, abra **Actions → Tests → execução → Summary** para ver status e contagens. Em **Artifacts**, baixe `results`: contém `junit.xml` e screenshots quando há falhas capturadas pelo fixture. Os relatórios são enviados mesmo se os testes falharem e ficam disponíveis por 30 dias.
 
+## Riscos e decisão no CI
+
+O logout é testado contra acesso direto ao catálogo, carrinho e às duas etapas do checkout. Cada rota começa com uma sessão nova, encerra a sessão e exige bloqueio e tela de login. Isso cobre o controle de navegação da demonstração; não comprova revogação de tokens ou segurança de backend.
+
+O gate exige testes aprovados e JUnit legível, sem falhas, cenários ignorados ou relatório vazio. Uma execução sem relatório não aprova o commit. Em uma falha, confira primeiro instalação/rede, depois o estado capturado nos artifacts e a expectativa do cenário; mudar a expectativa exige confirmar a regra do ambiente. Sem retry automático para transformar uma falha em aprovação.
+
 Datas de commits deste portfólio foram reorganizadas retroativamente; as execuções do Actions mantêm suas datas reais.

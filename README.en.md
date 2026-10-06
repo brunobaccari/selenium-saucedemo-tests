@@ -20,7 +20,7 @@ Use `Copy-Item .env.example .env` on PowerShell. URLs and public demo credential
 
 ## Scenarios
 
-Six cases cover both price-sort directions with complete expected sequences, backpack and bike-light details and return navigation, adding from product details and removing in the cart, and logout followed by direct access to the protected catalog.
+Nine cases cover both price-sort directions with complete expected sequences, backpack and bike-light details and return navigation, adding from product details and removing in the cart, and logout followed by direct access to the protected catalog.
 
 `pages.py` contains catalog interactions. `tests/test_catalog.py` holds explicit expectations. `tests/conftest.py` opens a browser per test and captures screenshots on failure.
 
@@ -35,5 +35,11 @@ JUnit and screenshots are written to `results/` and uploaded by CI. See [Actions
 ## GitHub Actions results
 
 In GitHub, open **Actions → Tests → run → Summary** for status and counts. Under **Artifacts**, download `results`: it contains `junit.xml` and screenshots when failures are captured by the fixture. Reports are uploaded even when tests fail and retained for 30 days.
+
+## Risks and CI decision
+
+Logout is tested against direct access to the catalog, cart and both checkout steps. Each route starts with a fresh session, logs out and requires rejection plus the login screen. This covers the demo navigation guard; it does not establish backend security or token revocation.
+
+The gate requires successful tests and readable JUnit, with no failures, skipped cases or empty report. A run without a report does not approve the commit. For a failure, check installation/network first, then the state captured in artifacts and the scenario expectation; changing an expectation requires confirming the target rule. No automatic test retry converts a failure into approval.
 
 Commit dates in this portfolio were reorganized retroactively; Actions runs retain their actual execution dates.
