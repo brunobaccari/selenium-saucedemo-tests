@@ -46,7 +46,7 @@ jobs:
 
           lines = ['## Testes', '', f"Etapa de testes: **{os.environ['TEST_OUTCOME']}**.", '']
           report = Path('results/junit.xml')
-          invalid_report = False
+          invalid_report = True
           if report.exists():
               try:
                   suites = list(ET.parse(report).getroot().iter('testsuite'))
@@ -56,6 +56,7 @@ jobs:
                   for suite in suites:
                       for key in counts:
                           counts[key] += int(suite.attrib[key])
+                  invalid_report = counts['tests'] == 0 or any(counts[key] for key in ('failures', 'errors', 'skipped'))
                   passed = counts['tests'] - counts['failures'] - counts['errors'] - counts['skipped']
                   if passed < 0 or any(value < 0 for value in counts.values()):
                       raise ValueError('Contagens inconsistentes')
@@ -66,9 +67,11 @@ jobs:
                   lines.append('**JUnit ilegível ou inválido: contagens indisponíveis; não há aprovação registrada.**')
           else:
               lines.append('JUnit não gerado: confira a instalação e a etapa de execução; isso não representa aprovação.')
+          gate_passed = not invalid_report and os.environ['TEST_OUTCOME'] == 'success'
+          lines += ['', 'Gate: **aprovado**.' if gate_passed else 'Gate: **reprovado**. Todos os cenários devem executar e passar, com JUnit válido.']
           url = os.environ.get('ARTIFACT_URL')
           lines += ['', f'[Baixar relatórios desta execução]({url})' if url else 'Artifact indisponível: confira a etapa de upload.']
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as output:
               output.write('\n'.join(lines) + '\n')
-          raise SystemExit(1 if invalid_report else 0)
+          raise SystemExit(0 if gate_passed else 1)
           PY
