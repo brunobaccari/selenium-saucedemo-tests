@@ -7,13 +7,6 @@ from selenium import webdriver
 from pages import CatalogPage
 
 
-@pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    outcome = yield
-    report = outcome.get_result()
-    setattr(item, f'rep_{report.when}', report)
-
-
 @pytest.fixture
 def catalog(request):
     options = webdriver.ChromeOptions()
@@ -31,8 +24,8 @@ def catalog(request):
         page.login()
         yield page
     finally:
-        report = getattr(request.node, 'rep_call', None)
-        if report is None or report.failed:
+        try:
             Path('results').mkdir(exist_ok=True)
             driver.save_screenshot(f'results/{request.node.name}.png')
-        driver.quit()
+        finally:
+            driver.quit()
